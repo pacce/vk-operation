@@ -1,0 +1,16 @@
+#version 450
+
+layout(std430, set=0, binding=0) buffer inbound {
+    float xs[];
+};
+
+void main() {
+    const uint thid = gl_GlobalInvocationID.x;
+    for (int d = 0; d <  log2(8); d++) {
+        float index = pow(2, d);
+        if (thid >= index) {
+            uint offset = uint(index);
+            xs[thid]    = xs[thid - offset] + xs[thid];
+        }
+    }
+}
